@@ -155,10 +155,15 @@ def bounce(delay=.01):
 
 
 actions = {
-    b'1': scroll,
-    b'2': blink,
-    b'3': static,
-    b'4': pulse,
-    b'5': center4,
-    b'6': off
+    b'off': off,
+    b'scroll': scroll,
+    b'blink': blink,
+    b'on': static,
+    b'static': static,
+    b'pulse': pulse,
+    b'center': center4,
+    b'rainbow': rainbow,
+    b'sweep': color_sweep,
+    b'moving': moving_dot4,
+    b'bounce': bounce
     }
