@@ -2,7 +2,7 @@ import net # Connect to the network
 from server_led import Server
 import led
 
-action = led.static
+action = led.on
 s = Server()
 while True:
   while not net.isconnected():
@@ -10,7 +10,7 @@ while True:
     if net.isconnected():
       for i in range(4):
         led.tiny_blink(blink_color=led.GREEN,delay=.2)
-      action = led.static
+      action = led.on
   s.main_loop()
   while not s.q.empty():
     data = s.q.get().strip()
