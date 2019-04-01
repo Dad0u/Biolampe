@@ -3,8 +3,7 @@ import machine
 from neopixel import NeoPixel
 
 
-#MAX = 255
-MAX = 10
+MAX = 255
 #RGBW
 NPIX = 64
 FULL = (MAX,)*4
@@ -51,7 +50,7 @@ def blink(color=WHITE,delay=.5):
     sleep(delay)
 
 
-def static(color=WHITE,delay=1):
+def on(color=WHITE,delay=1):
   pix.fill(color)
   pix.write()
   sleep(delay)
@@ -86,7 +85,7 @@ def tiny_blink(color=WHITE,blink_color=BLACK,delay=.5):
   sleep(delay)
 
 def off():
-  static(BLACK)
+  on(BLACK)
 
 def rainbow(w=0):
   for i in range(8):
@@ -126,11 +125,41 @@ def interp(x,y,color):
   pix.write()
 
 
+def interp_9(x,y,color):
+  x = min(max(0,x),5)
+  y = min(max(0,y),5)
+  xa = int(x)
+  ya = int(y)
+  for i in range(3):
+    for j in range(3):
+      pix[(xa+i)*8+ya+j] = color
+  pix.write()
+
 x,y = 0,0
-speedx = .15896
-speedy = .135478
+speedx = .35896
+speedy = .435478
 c = 0
 def bounce(delay=.01):
+  global x,y,c,speedx,speedy
+  x += speedx
+  y += speedy
+  if x > 7:
+    x = 14-x
+    speedx = -speedx
+  elif x < 0:
+    x = -x
+    speedx = -speedx
+  if y > 7:
+    y = 14-y
+    speedy = -speedy
+  elif y < 0:
+    y = -y
+    speedy = -speedy
+  pix.fill(BLACK)
+  interp(x,y,(255,)*4)
+  sleep(delay)
+
+def bounce_color(delay=.01):
   global x,y,c,speedx,speedy
   x += speedx
   y += speedy
@@ -153,17 +182,56 @@ def bounce(delay=.01):
   interp(x,y,color(c))
   sleep(delay)
 
+def bounce_9(delay=.01):
+  global x,y,c,speedx,speedy
+  x += speedx
+  y += speedy
+  if x > 7:
+    x = 14-x
+    speedx = -speedx
+  elif x < 0:
+    x = -x
+    speedx = -speedx
+  if y > 7:
+    y = 14-y
+    speedy = -speedy
+  elif y < 0:
+    y = -y
+    speedy = -speedy
+  pix.fill(BLACK)
+  #interp(x,y,(255,)*4)
+  interp_9(x,y,(255,)*4)
+  sleep(delay)
+
+def full():
+  on(FULL)
+
+def red():
+  on(RED)
+
+def green():
+  on(GREEN)
+
+def blue():
+  on(BLUE)
 
 actions = {
     b'off': off,
     b'scroll': scroll,
     b'blink': blink,
-    b'on': static,
-    b'static': static,
+    b'on': on,
+    b'static': on,
+    b'full':full,
     b'pulse': pulse,
     b'center': center4,
     b'rainbow': rainbow,
     b'sweep': color_sweep,
     b'moving': moving_dot4,
-    b'bounce': bounce
+    b'bounce': bounce,
+    b'bounce_color': bounce_color,
+    b'bounce_9': bounce_9,
+    b'red':red,
+    b'green':green,
+    b'blue':blue,
+
     }
